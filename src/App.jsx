@@ -110,17 +110,17 @@ const parseFormattedText = (text) => {
 
 const getVideoEmbedUrl = (url) => {
   if (!url) return null;
-  // // YouTube short link
-  // const ytShort = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
-  // if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}`;
+  // YouTube short link
+  const ytShort = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
+  if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}`;
 
-  // // YouTube watch link
-  // const ytWatch = url.match(/[?&]v=([A-Za-z0-9_-]+)/);
-  // if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}`;
+  // YouTube watch link
+  const ytWatch = url.match(/[?&]v=([A-Za-z0-9_-]+)/);
+  if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}`;
 
-  // // Vimeo (simple)
-  // const vimeo = url.match(/vimeo\.com\/(\d+)/);
-  // if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  // Vimeo (simple)
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
 
   return null;
 };
@@ -203,7 +203,7 @@ function App() {
           text: 'Am creat un logo care îmbină elemente psihologice și animale, simbolizând conexiunea profundă dintre om și animal.',
           images: [
             { 
-              src: 'animapsych/src/assets/logo.png', alt: 'AnimaPsych Logo' 
+              src: logo, alt: 'AnimaPsych Logo' 
             }
           ]          
         },
@@ -212,46 +212,46 @@ function App() {
           text: 'Am proiectat o carte de vizită profesională care reflectă valorile și estetica AnimaPsych.',
           images: [
             { 
-              src: {BusinessCardFront}, alt: 'Front of AnimaPsych Business Card' 
+              src: BusinessCardFront, alt: 'Front of AnimaPsych Business Card' 
             },
             { 
-              src: {BusinessCardBack}, alt: 'Back of AnimaPsych Business Card' 
+              src: BusinessCardBack, alt: 'Back of AnimaPsych Business Card' 
             }
           ]          
         },
         {
           title: 'CV clasic (PDF)',
           text: 'Am realizat un CV profesional în format PDF.',
-          pdf: {CV}
+          pdf: CV
         },
         {
           title: 'CV clasic (Video)',
           text: 'Am realizat un CV profesional în format Video.',
-          video: {CVVideo}
+          video: CVVideo
         },
         {
           title: 'Reclama print: AnimaPsych',
           text: 'Designul unei reclame print pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
           images: [
             { 
-              src: {ReclamaPrint}, alt: 'AnimaPsych Reclama Print' 
+              src:ReclamaPrint, alt: 'AnimaPsych Reclama Print' 
             }
           ]          
         },
         {
           title: 'Reclama audio: AnimaPsych',
           text: 'Designul unei reclame audio pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          audio: {ReclamaAudio}  
+          audio: ReclamaAudio
         },
         {
           title: 'Reclama video: AnimaPsych',
           text: 'Designul unei reclame video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          video: {Reclamavideo}  
+          video: Reclamavideo
         },
         {
           title: 'Tutorial video: AnimaPsych',
           text: 'Designul unui tutorial video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          video: {TutorialVideo}  
+          video: TutorialVideo
         },
       ]
     },
