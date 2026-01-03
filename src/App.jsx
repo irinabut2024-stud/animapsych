@@ -1,5 +1,13 @@
 import { useState } from 'react'
 import logo from './assets/logo.png'
+import CV from './assets/CV.pdf'
+import ReclamaAudio from './assets/reclama_audio.m4a'
+import TutorialVideo from './assets/tutorial.mp4'
+import Reclamavideo from './assets/Reclama.mp4'
+import CVVideo from './assets/CV.mp4'
+import BusinessCardFront from './assets/1.png'
+import BusinessCardBack from './assets/2.png'
+import ReclamaPrint from './assets/reclama.png'
 import './App.css'
 
 
@@ -102,17 +110,17 @@ const parseFormattedText = (text) => {
 
 const getVideoEmbedUrl = (url) => {
   if (!url) return null;
-  // YouTube short link
-  const ytShort = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
-  if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}`;
+  // // YouTube short link
+  // const ytShort = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
+  // if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}`;
 
-  // YouTube watch link
-  const ytWatch = url.match(/[?&]v=([A-Za-z0-9_-]+)/);
-  if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}`;
+  // // YouTube watch link
+  // const ytWatch = url.match(/[?&]v=([A-Za-z0-9_-]+)/);
+  // if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}`;
 
-  // Vimeo (simple)
-  const vimeo = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  // // Vimeo (simple)
+  // const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  // if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
 
   return null;
 };
@@ -204,46 +212,46 @@ function App() {
           text: 'Am proiectat o carte de vizită profesională care reflectă valorile și estetica AnimaPsych.',
           images: [
             { 
-              src: 'animapsych/src/assets/1.png', alt: 'Front of AnimaPsych Business Card' 
+              src: {BusinessCardFront}, alt: 'Front of AnimaPsych Business Card' 
             },
             { 
-              src: 'animapsych/src/assets/2.png', alt: 'Back of AnimaPsych Business Card' 
+              src: {BusinessCardBack}, alt: 'Back of AnimaPsych Business Card' 
             }
           ]          
         },
         {
           title: 'CV clasic (PDF)',
           text: 'Am realizat un CV profesional în format PDF.',
-          pdf: 'animapsych/src/assets/CV.pdf'
+          pdf: {CV}
         },
         {
           title: 'CV clasic (Video)',
           text: 'Am realizat un CV profesional în format Video.',
-          video: 'animapsych/src/assets/CV.mp4'
+          video: {CVVideo}
         },
         {
           title: 'Reclama print: AnimaPsych',
           text: 'Designul unei reclame print pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
           images: [
             { 
-              src: 'animapsych/src/assets/reclama.png', alt: 'AnimaPsych Reclama Print' 
+              src: {ReclamaPrint}, alt: 'AnimaPsych Reclama Print' 
             }
           ]          
         },
         {
           title: 'Reclama audio: AnimaPsych',
           text: 'Designul unei reclame audio pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          audio: 'animapsych/src/assets/reclama_audio.m4a'  
+          audio: {ReclamaAudio}  
         },
         {
           title: 'Reclama video: AnimaPsych',
           text: 'Designul unei reclame video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          video: 'animapsych/src/assets/Reclama.mp4'  
+          video: {Reclamavideo}  
         },
         {
           title: 'Tutorial video: AnimaPsych',
           text: 'Designul unui tutorial video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
-          video: 'animapsych/src/assets/tutorial.mp4'  
+          video: {TutorialVideo}  
         },
       ]
     },
