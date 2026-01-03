@@ -1,0 +1,333 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0rem;
+  padding-top: 2rem;
+  text-align: left;
+  position: relative;
+  min-height: auto;
+}
+
+.header h1 {
+  position: sticky;
+  top: 5.5rem;
+  font-size: 3.5rem;
+  text-align: left;
+  /* padding: -2rem 1rem; 
+  padding-bottom: 2rem;  */
+  text-overflow: ellipsis;
+}
+
+.header h2 {
+  position: sticky;
+  bottom: 5.5rem;    /* distance from header bottom */
+  left: 1.5rem;       /* aligns with header padding */
+  right: 15.5rem;
+  margin: 0;
+  font-size: 1.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: wrap;
+  color: rgba(255,255,255,0.95);
+  text-shadow: 0 4px 8px rgba(0,0,0,0.9);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(0,77,94,0.4) 0%, rgba(20,114,133,0.4) 100%), url('./assets/background_h1.png') center/cover;
+  color: white;
+  padding: 1.5rem 2rem;
+  padding-bottom: 3.6rem; /* room for overlapping logo/buttons */
+  border-radius: 0 0 8px 8px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.header-logo {
+  position: absolute;
+  left: 1.5rem;
+  bottom: -44px;         /* pushes logo half below header */
+  height: 6.5rem;
+  padding: 0.25em;
+  transition: transform 200ms ease, filter 220ms ease;
+  z-index: 1001;
+  background: transparent;
+  display: block;
+}
+
+
+.header-logo:hover,
+.header-logo:focus {
+  transform: translateY(-4px) scale(1.03);
+  filter:
+    drop-shadow(0 6px 10px rgba(1,51,62,0.35))
+    drop-shadow(0 0 14px rgba(1,51,62,0.45));
+  outline: none;
+}
+
+.button-row {
+  position: absolute;
+  left: calc(1.5rem + 6.5rem + 0.75rem); /* header padding + logo width + gap */
+  right: 1.5rem;
+  bottom: -52px; /* places buttons just below header edge */
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1001;
+}
+
+.btn {
+  flex: 1;
+  background: #01333e;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+  min-width: 0;
+  transition: background 180ms, transform 120ms, box-shadow 180ms;
+}
+
+.btn:active { transform: translateY(1px); }
+/* hover */
+.button-row .btn:hover {
+  background: #54787d;
+  box-shadow: 0 6px 14px rgba(122,161,166,0.25);
+}
+
+/* keyboard focus (visible for accessibility) */
+.button-row .btn:focus,
+.button-row .btn:focus-visible {
+  box-shadow: 0 6px 14px rgba(122,161,166,0.25);
+  background: #54787d;
+}
+
+.content-box {
+  position: relative;
+  width: 100%;
+  max-width: 1080px;
+  margin: 5.5rem auto 2rem; /* space so it sits below header/buttons */
+  padding: 2rem 1.5rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.content-hero {
+  text-align: left;
+}
+
+.content-hero h1 {
+  margin: 0 0 0.5rem 0;
+  color: #01333e;
+  font-size: 1.7rem;
+  text-align: left;
+}
+
+.content-hero h2 {
+  margin: 0 0 1rem 0;
+  color: #147285;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.content-hero p {
+  color: #444;
+  line-height: 1.6;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.content-two-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  text-align: left;
+}
+
+.content-section {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #01333e;
+  text-align: left;
+}
+
+.content-section h2 {
+  margin-top: 0;
+  color: #01333e;
+  font-size: 1.3rem;
+  text-align: left;
+}
+
+.content-section p {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+.content-simple {
+  text-align: left;
+}
+
+.content-simple h2 {
+  margin-top: 0;
+  color: #01333e;
+  font-size: 1.8rem;
+  text-align: left;
+}
+
+.content-simple p {
+  color: #444;
+  line-height: 1.6;
+  font-size: 1rem;
+  text-align: left;
+}
+
+/* social buttons in header bottom-right */
+.social-row {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 12px;             /* sits inside header bottom area */
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  z-index: 1002;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 36px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px;
+  text-decoration: none;
+  transition: background 180ms, transform 120ms;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.social-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.social-btn:hover {
+  background: #01333e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(1, 51, 62, 0.35);
+  color: #fff;
+}
+
+.social-btn:focus {
+  outline: 2px solid #01333e;
+  outline-offset: 2px;
+  box-shadow: 0 6px 12px rgba(1, 51, 62, 0.25);
+}
+
+/* Small screens / phones */
+@media (max-width: 768px) {
+
+  #root { 
+    padding-top: 20px; 
+    position: relative;
+    min-height: auto;
+  }
+
+  .header {
+    padding: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* Put logo into normal flow and reduce size */
+  .header-logo {
+    position: relative;
+    height: 4.8rem;
+    bottom: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Anchor button row under the logo; allow wrap / horizontal scroll */
+  .button-row {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 0.25rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: nowrap; 
+    overflow-x: auto;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .button-row .btn {
+    flex: 0 0 auto;
+    min-width: 120px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  /* make social icons smaller and sit in header top-right */
+  .social-row {
+    position: absolute;
+    right: 0.75rem;
+    top: 0.75rem;
+    bottom: auto;
+  }
+
+  /* content flows below header naturally on mobile */
+  .content-box {
+    position: relative;
+    left: auto;
+    transform: none;
+    width: calc(100% - 2rem);
+    max-width: 1080px;
+    margin: 0.75rem auto 2rem;
+    top: auto;
+    padding: 1.25rem;
+  }
+
+  /* reduce hero sizes */
+  .content-hero h1 { font-size: 1.4rem; }
+  .content-hero h2 { font-size: 1rem; }
+  .content-hero p { font-size: 0.95rem; }
+}
+
+/* Very small phones */
+@media (max-width: 420px) {
+  #root { padding-top: 20px; }
+
+  .button-row .btn { flex-basis: 100%; min-width: 0; }
+  .header-logo { height: 4rem; }
+  .content-box { padding: 1rem; width: calc(100% - 1.5rem); }
+  .content-hero h1 { font-size: 1.2rem; }
+}
