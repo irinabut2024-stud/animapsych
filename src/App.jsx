@@ -100,9 +100,28 @@ const parseFormattedText = (text) => {
   return elements;
 };
 
+const getVideoEmbedUrl = (url) => {
+  if (!url) return null;
+  // YouTube short link
+  const ytShort = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
+  if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}`;
+
+  // YouTube watch link
+  const ytWatch = url.match(/[?&]v=([A-Za-z0-9_-]+)/);
+  if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}`;
+
+  // Vimeo (simple)
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+
+  return null;
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState('home')
+  const [lightboxSrc, setLightboxSrc] = useState(null)
+  const openLightbox = (src) => setLightboxSrc(src)
+  const closeLightbox = () => setLightboxSrc(null)
 
   const content = {
     home: {
@@ -171,6 +190,61 @@ function App() {
           title: 'AnimaPsych',
           text: 'Micro-campanie de 30 de zile de psihologie animală digitală desfăsurată pe social media: Un experiment care a demonstrat cum educația vizuală si conceptele academice pot ajunge la un public numeros.\n**Instagram:** https://www.instagram.com/anima_psych/\n**Facebook:** https://www.facebook.com/profile.php?id=61585400849025'
         },
+        {
+          title: 'Logo Design pentru AnimaPsych',
+          text: 'Am creat un logo care îmbină elemente psihologice și animale, simbolizând conexiunea profundă dintre om și animal.',
+          images: [
+            { 
+              src: 'animapsych/src/assets/logo.png', alt: 'AnimaPsych Logo' 
+            }
+          ]          
+        },
+        {
+          title: 'Carte de vizită pentru AnimaPsych',
+          text: 'Am proiectat o carte de vizită profesională care reflectă valorile și estetica AnimaPsych.',
+          images: [
+            { 
+              src: 'animapsych/src/assets/1.png', alt: 'Front of AnimaPsych Business Card' 
+            },
+            { 
+              src: 'animapsych/src/assets/2.png', alt: 'Back of AnimaPsych Business Card' 
+            }
+          ]          
+        },
+        {
+          title: 'CV clasic (PDF)',
+          text: 'Am realizat un CV profesional în format PDF.',
+          pdf: 'animapsych/src/assets/CV.pdf'
+        },
+        {
+          title: 'CV clasic (Video)',
+          text: 'Am realizat un CV profesional în format Video.',
+          video: 'animapsych/src/assets/CV.mp4'
+        },
+        {
+          title: 'Reclama print: AnimaPsych',
+          text: 'Designul unei reclame print pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
+          images: [
+            { 
+              src: 'animapsych/src/assets/reclama.png', alt: 'AnimaPsych Reclama Print' 
+            }
+          ]          
+        },
+        {
+          title: 'Reclama audio: AnimaPsych',
+          text: 'Designul unei reclame audio pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
+          audio: 'animapsych/src/assets/reclama_audio.m4a'  
+        },
+        {
+          title: 'Reclama video: AnimaPsych',
+          text: 'Designul unei reclame video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
+          video: 'animapsych/src/assets/Reclama.mp4'  
+        },
+        {
+          title: 'Tutorial video: AnimaPsych',
+          text: 'Designul unui tutorial video pentru promovarea serviciilor AnimaPsych în reviste de specialitate.',
+          video: 'animapsych/src/assets/tutorial.mp4'  
+        },
       ]
     },
     blog: {
@@ -216,7 +290,83 @@ function App() {
           {data.sections.map((section, idx) => (
             <section key={idx} className="content-section">
               <h2>{section.title}</h2>
-              <div>{parseFormattedText(section.text)}</div>
+              {section.text && <div>{parseFormattedText(section.text)}</div>}
+              {/* images wrapper: single class that contains all images from the list */}
+              {Array.isArray(section.images) && section.images.length > 0 && (
+                <div className="section-images">
+                  {section.images.map((image, i) => (
+                    <img
+                      key={i}
+                      src={image.src}
+                      alt={image.alt || `Section Image ${i + 1}`}
+                      className="section-image"
+                      onClick={() => openLightbox(image.src)} style={{ cursor: 'pointer' }}
+                    />
+                  ))}
+                </div>
+              )}
+              {section.pdf && (
+                <div className="section-pdf-wrap">
+                  <a
+                    className="pdf-link"
+                    href={section.pdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                  >
+                    View / Download PDF
+                  </a>
+
+                  <div className="pdf-embed">
+                    <iframe
+                      src={section.pdf}
+                      title={`${section.title} PDF`}
+                      className="section-pdf"
+                    />
+                  </div>
+                </div>
+              )}
+              {section.video && (
+                <div className="section-video">
+                  {(() => {
+                    const embed = getVideoEmbedUrl(section.video);
+                    if (embed) {
+                      return (
+                        <div className="video-embed">
+                          <iframe
+                            src={embed}
+                            title={`${section.title} video`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </div>
+                      );
+                    }
+
+                    // native video file (mp4/webm)
+                    return (
+                      <video controls className="native-video" src={section.video}>
+                        Your browser does not support the video tag. <a href={section.video}>Open video</a>
+                      </video>
+                    );
+                  })()}
+                </div>
+              )}
+              {section.audio && (
+                <div className="section-audio">
+                  <audio
+                    className="native-audio"
+                    controls
+                    preload="metadata"
+                    src={section.audio}
+                    aria-label={`${section.title} audio`}
+                  />
+                  <div className="audio-fallback">
+                    <a href={section.audio} target="_blank" rel="noopener noreferrer" download>Open / Download audio</a>
+                  </div>
+                </div>
+              )}
             </section>
           ))}
         </div>
@@ -239,7 +389,6 @@ function App() {
         <img src={logo} alt="Logo" className="header-logo" />
         <h1>AnimaPsych</h1>
         <h2>Descifrăm instinctele pentru a construi conexiuni: Psihologie aplicată dincolo de cuvinte, de la om la animal.</h2>
-        {/* <img src={logo} alt="Logo" className="header-logo" /> */}
 
         <nav className="button-row" aria-label="main actions">
           {tabs.map(tab => (
@@ -276,6 +425,10 @@ function App() {
           <strong>Disclaimer:</strong>  AI Generated Content | Proiect Academic realizat în cadrul Facultății de Psihologie.
         </p>
       </footer>
+
+      {lightboxSrc && (
+
+      <div className="lightbox-overlay" onClick={closeLightbox}> <div className="lightbox-content" onClick={(e) => e.stopPropagation()}> <button className="lightbox-close" onClick={closeLightbox} aria-label="Close">X</button> <img src={lightboxSrc} alt="" className="lightbox-image" /> </div> </div> )}
     </>
   )
 }
