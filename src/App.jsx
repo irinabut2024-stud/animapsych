@@ -2,6 +2,105 @@ import { useState } from 'react'
 import logo from './assets/logo.png'
 import './App.css'
 
+
+// Parse inline markdown: **bold**, [text](url), and plain URLs
+const parseInline = (text) => {
+  if (!text) return null;
+
+  const nodes = [];
+  const inlineRegex = /(\*\*([^*]+)\*\*)|\[([^\]]+)\]\(([^)]+)\)|(https?:\/\/[^\s]+)/g;
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+
+  while ((match = inlineRegex.exec(text)) !== null) {
+    // push preceding plain text
+    if (match.index > lastIndex) {
+      nodes.push(text.slice(lastIndex, match.index));
+    }
+
+    if (match[1]) {
+      // bold matched (group 2)
+      nodes.push(<strong key={key++}>{match[2]}</strong>);
+    } else if (match[3]) {
+      // markdown link matched (group 3=text, group 4=url)
+      const href = match[4];
+      const label = match[3];
+      nodes.push(
+        <a key={key++} href={href} target="_blank" rel="noopener noreferrer">
+          {label}
+        </a>
+      );
+    } else if (match[5]) {
+      // plain URL matched (group 5)
+      const href = match[5];
+      nodes.push(
+        <a key={key++} href={href} target="_blank" rel="noopener noreferrer">
+          {href}
+        </a>
+      );
+    }
+
+    lastIndex = inlineRegex.lastIndex;
+  }
+
+  // trailing text
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes;
+};
+
+// Updated parseFormattedText uses parseInline for paragraphs and list items
+const parseFormattedText = (text) => {
+  if (!text) return null;
+
+  const elements = [];
+  const lines = text.split('\n');
+  let bulletListItems = [];
+  let paraIndex = 0;
+  let listIndex = 0;
+
+  lines.forEach((line, idx) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith('•')) {
+      bulletListItems.push(
+        <li key={`bullet-${listIndex++}`}>{parseInline(trimmed.substring(1).trim())}</li>
+      );
+    } else {
+      if (bulletListItems.length > 0) {
+        elements.push(
+          <ul key={`list-${idx}`} style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+            {bulletListItems}
+          </ul>
+        );
+        bulletListItems = [];
+      }
+
+      if (trimmed) {
+        elements.push(
+          <p key={`para-${paraIndex++}`} style={{ marginTop: idx > 0 ? '0.5rem' : '0' }}>
+            {parseInline(trimmed)}
+          </p>
+        );
+      }
+    }
+  });
+
+  if (bulletListItems.length > 0) {
+    elements.push(
+      <ul key="final-list" style={{ marginTop: '0.5rem' }}>
+        {bulletListItems}
+      </ul>
+    );
+  }
+
+  return elements;
+};
+
+
 function App() {
   const [activeTab, setActiveTab] = useState('home')
 
@@ -9,37 +108,69 @@ function App() {
     home: {
       type: 'home',
       title: 'Specialist în Relația Om-Animal & Ecosisteme Emoționale.',
-      subtitle: ' Ajut familiile și organizațiile să înțeleagă limbajul nevăzut al animalelor pentru a crea armonie, siguranță și atașament profund.Descifrăm instinctele pentru a construi conexiuni',
-      text: 'Bine ai venit în spațiul unde știința comportamentului întâlnește empatia. Aici, traducerile nu se fac dintr-o limbă în alta, ci dintr-un instinct într-o emoție.'
-    },
-    despre: {
-      type: 'despre',
-      sections: [
+      paragraphs: [
         {
-          title: 'Poveste',
-          text: 'Sunt psiholog (în formare) pasionat de frontiera dintre speciile noastre. Cred că sănătatea noastră mentală este strâns legată de modul în care interacționăm cu natura și cu animalele de lângă noi.'
+          text: 'Bine ai venit în spațiul unde știința psihologiei comportamentale întâlnește empatia. Aici, traducerile nu se fac dintr-o limbă în alta, ci dintr-un instinct într-o emoție.'
         },
         {
-          title: 'Abordare',
-          text: 'Misiunea mea este să transform termenul de \'stăpân\' în cel de \'părinte conștient\', folosind cercetarea academică și instrumentele digitale moderne pentru a facilita această evoluție.'
+          text: 'AnimaPsych a început ca un proiect academic în care am testat capacitatea AI de a comunica prin imagini concepte complexe de psihologie comparată.'
+        },
+        {
+          text: 'Astăzi, este baza metodologiei mele de lucru: îmbin psihologia comportamentală și tehnologia modernă pentru a îmbunătăți calitatea vieții în familiile care împart casa cu un animal de companie. Cred că viitorul psihologiei este multispecie.'
+        }
+      ]
+    },
+    despre: {
+      type: 'multi-section',
+      text: 'Sunt psiholog (în formare) pasionat de frontiera dintre speciile noastre. Cred că sănătatea noastră mentală este strâns legată de modul în care interacționăm cu natura și cu animalele de lângă noi.\n**Abordarea acestui proiect** este de a transforma termenul de \'stăpân\' în cel de \'părinte conștient\', folosind cercetarea academică și instrumentele digitale moderne pentru a facilita această evoluție.\n**🧭 Definirea Conceptului AnimaPsych:**',
+      sections: [
+        {
+          title: 'Etimologie și Semnificație (Etymology and Meaning)',
+          text: '• **Anima:** Provine din latină și înseamnă „suflet”, „suflare” sau „viață”. În psihologie (Jung), reprezintă latura interioară, profundă.\n• **Psych (Psychology):** Studiul minții și al comportamentului. \n• **Conceptul central:** Explorarea „lumii interioare” a animalelor pentru a înțelege ce se află în spatele comportamentelor lor exterioare.'
+        },
+        {
+          title: 'Misiunea (The Mission)',
+          text: 'Misiunea **AnimaPsych** este de a traduce limbajul instinctual și emoțional al animalelor (în special al celor de companie) pe înțelesul oamenilor. Ne propunem să transformăm „stăpânii de animale” în „parteneri empatici” prin educație bazată pe psihologie și etologie.'
+        },
+        {
+          title: 'Viziunea (The Vision)',
+          text: 'O lume în care relația om-animal este bazată pe înțelegere profundă, nu doar pe dresaj. Vrem să demonstrăm că în spatele fiecărei canapele roase sau a fiecărui tors se află un mecanismpsihic fascinant.'
+        },
+        {
+          title: 'Unghiul Unic (The "Freudian" Twist)',
+          text: 'Spre deosebire de paginile clasice de „pet training”, **AnimaPsych** aduce o notă intelectuală și analitică:\n• Privim animalul nu ca pe o jucărie, ci ca pe un **subiect cu o viață psihică complexă**.\n• Folosim arhetipuri și concepte psihologice (instinct, atașament, traume, ierarhii) pentru aexplica viața de zi cu zi cu un animal de companie.'
         }
       ]
     },
     servicii: {
-      type: 'despre',
+      type: 'multi-section',
       sections: [
         {
-          title: 'Proiectul AnimaPsych',
-          text: 'Sunt psiholog (în formare) pasionat de frontiera dintre speciile noastre. Cred că sănătatea noastră mentală este strâns legată de modul în care interacționăm cu natura și cu animalele de lângă noi.'
+          title: 'Consultanță de Nișă: „Family System Balancing”',
+          text: '• Noi nu tratăm doar animalul de companie, noi tratăm **dinamica**.\n• Oferim sesiuni de terapie/consultanță familiilor care trec prin schimbări majore: apariția unui nou-născut, mutarea în casă nouă sau gestionarea anxietății de separare a animalului după ce stăpânii revin la birou.'
         },
         {
-          title: 'Proiecte de Consultanță',
-          text: ' (Aici vei adăuga pe viitor studii de caz: „Reabilitarea anxietății de separare prin metoda atașamentului securizant”)'
+          title: 'Creativ Digital & AI Educator (The Digital Lab)',
+          text: '• Oferim ghiduri interactive, folosind AI-ul pentru a vizualiza emoțiile animalelor.\n• Dezvoltăm aplicații care „traduc” limbajul corporal al câinelui tău prin scanare foto, oferind explicații psihologice instantanee.'
         },
         {
-          title: 'Publicații/Workshop-uri',
-          text: 'Link-uri către articolele tale de pe blog sau prezentările de la facultate.'
+          title: 'Design de Spațiu „Neuro-Animal Friendly”',
+          text: '• Colaborarăm cu arhitecți pentru a crea locuințe care satisfac nevoile psihologice ale ambelor specii.\n• Recomandăm soluții de design interior care reduc stresul (delimitarea zonelor pentru „Safe Place”, controlul stimulilor vizuali și olfactive).'
+        },
+        {
+          title: 'Expertiză în Terapie Asistată de Animale (TAA)',
+          text: '• Dezvoltăm programe moderne de terapie pentru oameni (copii cu nevoi speciale, bătrâni sau angajați stresați) folosind animale.\n• Nu doar aducem un câine în cameră, ci elaborăm protocolul bazat pe Oxitocină și Biofilie.'
         }
+      ]
+    },
+    portofoliu: {
+      type: 'multi-section',
+      title: 'Portofoliu',
+      sections: [
+        {
+          title: 'AnimaPsych',
+          text: 'Micro-campanie de 30 de zile de psihologie animală digitală desfăsurată pe social media: Un experiment care a demonstrat cum educația vizuală si conceptele academice pot ajunge la un public numeros.\n**Instagram:** https://www.instagram.com/anima_psych/\n**Facebook:** https://www.facebook.com/profile.php?id=61585400849025'
+        },
       ]
     },
     blog: {
@@ -50,14 +181,15 @@ function App() {
     contact: {
       type: 'simple',
       title: 'Contact',
-      text: 'Pentru intrebari sau programari, ne puteti contacta la email@example.com sau telefon: +40 123 456 789.'
+      text: 'Ești gata să schimbi dinamica în casa ta? Contactează-ne:\n**Telefon:** 0712 345678\n**Email:** irinabut2024_@gmail.com\n**LinkedIn:** https://www.linkedin.com/in/anima-psych-6a4b093a1/\n**Instagram:** https://www.instagram.com/anima_psych/\n**Facebook:** https://www.facebook.com/profile.php?id=61585400849025\n**Website:** https://irinabut2024-stud.github.io/animapsych'
     }
   }
 
   const tabs = [
     { key: 'home', label: 'Acasă' },
     { key: 'despre', label: 'Despre mine' },
-    { key: 'servicii', label: 'Portofoliu' },
+    { key: 'servicii', label: 'Servicii' },
+    { key: 'portofoliu', label: 'Portofoliu' },
     { key: 'blog', label: 'AI & Instrumente' },
     { key: 'contact', label: 'Contact' }
   ]
@@ -67,21 +199,24 @@ function App() {
 
     if (data.type === 'home') {
       return (
-        <div className="content-hero">
+        <div className="content-home">
           <h1>{data.title}</h1>
-          <h2>{data.subtitle}</h2>
-          <p>{data.text}</p>
+          {data.paragraphs.map((paragraphs) => (
+              <p>{paragraphs.text}</p>
+          ))}
         </div>
       )
     }
 
-    if (data.type === 'despre') {
+    if (data.type === 'multi-section') {
       return (
-        <div className="content-two-section">
+        <div className="content-multi-section">
+          {data.title && <h1>{data.title}</h1>}
+          {data.text && <div className="intro-text">{parseFormattedText(data.text)}</div>}
           {data.sections.map((section, idx) => (
             <section key={idx} className="content-section">
               <h2>{section.title}</h2>
-              <p>{section.text}</p>
+              <div>{parseFormattedText(section.text)}</div>
             </section>
           ))}
         </div>
@@ -92,7 +227,7 @@ function App() {
       return (
         <div className="content-simple">
           <h2>{data.title}</h2>
-          <p>{data.text}</p>
+          <p>{parseFormattedText(data.text)}</p>
         </div>
       )
     }
@@ -135,6 +270,12 @@ function App() {
       <main className="content-box">
         {renderContent()}
       </main>
+
+      <footer className="disclaimer-footer">
+        <p>
+          <strong>Disclaimer:</strong>  AI Generated Content | Proiect Academic realizat în cadrul Facultății de Psihologie.
+        </p>
+      </footer>
     </>
   )
 }
