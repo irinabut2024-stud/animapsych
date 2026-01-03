@@ -101,9 +101,10 @@ function App() {
   return (
     <>
       <header className="header">
+        <img src={logo} alt="Logo" className="header-logo" />
         <h1>AnimaPsych</h1>
         <h2>Descifrăm instinctele pentru a construi conexiuni: Psihologie aplicată dincolo de cuvinte, de la om la animal.</h2>
-        <img src={logo} alt="Logo" className="header-logo" />
+        {/* <img src={logo} alt="Logo" className="header-logo" /> */}
 
         <nav className="button-row" aria-label="main actions">
           {tabs.map(tab => (
